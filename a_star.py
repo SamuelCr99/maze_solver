@@ -3,7 +3,7 @@ import pygame
 from dijkstra import *
 
 
-def get_adjacent(start,world,queue): 
+def get_adjacent(start,world,queue, end): 
     x = start.x
     y = start.y
     list = []
@@ -17,7 +17,7 @@ def get_adjacent(start,world,queue):
                     continue
                 world[x + x_axis][y + y_axis].backpointer = start
                 world[x + x_axis][y + y_axis].cost_to_here = start.cost_to_here + 1
-                dist = ((x + x_axis)**2 + (y+y_axis ** 2))**0.5
+                dist = (((end.x - x - x_axis)**2 + (end.y - y - y_axis)**2))**0.5 #Used for 
                 list.append((world[x + x_axis][y + y_axis].cost_to_here + dist,world[x + x_axis][y+y_axis]))
     
     for i in range(len(list)):
@@ -25,7 +25,7 @@ def get_adjacent(start,world,queue):
 
     return queue, world
 
-def a_star(world,start):
+def a_star(world,start,end):
     q = queue.PriorityQueue()
     q.put((0,start))
 
@@ -36,8 +36,7 @@ def a_star(world,start):
             extract_path(world,current)
         if (world[current.x][current.y].state == 0):
             world[current.x][current.y].state = 1
-        q, world = get_adjacent(current,world,q)
-        print(q.qsize())
+        q, world = get_adjacent(current,world,q, end)
         draw_screen(world)
         get_input(world)
 

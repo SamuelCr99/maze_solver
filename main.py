@@ -17,9 +17,13 @@ WHITE = (255,255,255)
 RED = (255,0,0)
 GREEN = (0,255,0)
 YELLOW = (255,255,0)
-BLUE = (0,0,255)
+BLUE = (0,100,255)
 
 creating_phase = True
+goal_phase = True
+end_phase = True
+start = 0
+end = 0
 
 class Square():
     def __init__(self, backpointer, state, cost_to_here,x, y):
@@ -67,15 +71,28 @@ def draw_screen (world):
 
 def get_input (world):
     global creating_phase
+    global goal_phase
+    global end_phase
+    global start 
+    global end
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             quit()
         if (creating_phase):
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.MOUSEBUTTONUP:
                 cursor_pos = pygame.mouse.get_pos()
                 x_val = int(cursor_pos[0] / BLOCK_SIZE)
                 y_val = int(cursor_pos[1] / BLOCK_SIZE)
-                world[x_val][y_val].state = -1  
+                if (goal_phase):
+                    world[x_val][y_val].state = 2
+                    start = world[x_val][y_val]
+                    goal_phase = False
+                elif (end_phase):
+                    world[x_val][y_val].state = 3
+                    end = world[x_val][y_val]
+                    end_phase = False
+                else:
+                    world[x_val][y_val].state = -1
             if event.type == pygame.KEYDOWN:
                 creating_phase = False
     return world
@@ -99,15 +116,12 @@ def build_square_array():
 
 def main(win):
     world = build_square_array()
-    world[0][0].state = 2
-    start = world[0][0]
-    world[39][39].state = 3 #End
     while(creating_phase):
         world = get_input(world)
         draw_screen(world)
     
     #dijkstra.dijkstra(world,start)
-    a_star.a_star(world,start)
+    a_star.a_star(world,start, end)
 
 
 
