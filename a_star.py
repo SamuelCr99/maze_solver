@@ -10,13 +10,12 @@ def get_adjacent(start,world,queue, end):
     for x_axis in range(-1,2):
         for y_axis in range(-1,2):
             if(x + x_axis >= 0 and y + y_axis >= 0 and x+x_axis < 40 and y+y_axis < 40 and (world[x + x_axis][y + y_axis].state == 0 or world[x + x_axis][y + y_axis].state == 3)):
-
                 if (x_axis == 0 and y_axis == 0):
                     continue
                 if (world[x_axis+x][y+y_axis] in list or queue_contains(queue,world[x+x_axis][y+y_axis])):
                     continue
                 world[x + x_axis][y + y_axis].backpointer = start
-                world[x + x_axis][y + y_axis].cost_to_here = start.cost_to_here + 1
+                world[x + x_axis][y + y_axis].cost_to_here = start.cost_to_here + 1  
                 dist = (((end.x - x - x_axis)**2 + (end.y - y - y_axis)**2))**0.5 #Used for 
                 list.append((world[x + x_axis][y + y_axis].cost_to_here + dist,world[x + x_axis][y+y_axis]))
     

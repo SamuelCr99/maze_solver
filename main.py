@@ -1,4 +1,5 @@
 import pygame
+from pygame.constants import K_SPACE, K_r
 import a_star
 import dijkstra
 import numpy as np
@@ -11,6 +12,7 @@ WIN = pygame.display.set_mode((SIZE, SIZE))
 BLOCK_PER_LINE = 40
 
 BLOCK_SIZE = SIZE/BLOCK_PER_LINE
+
 #Colors
 BLACK = (0,0,0)
 WHITE = (255,255,255)
@@ -19,6 +21,7 @@ GREEN = (0,255,0)
 YELLOW = (255,255,0)
 BLUE = (0,100,255)
 
+#Phases for different part of the program
 creating_phase = True
 goal_phase = True
 end_phase = True
@@ -69,7 +72,7 @@ def draw_screen (world):
     pygame.display.update()
 
 
-def get_input (world):
+def get_input (world): 
     global creating_phase
     global goal_phase
     global end_phase
@@ -93,12 +96,20 @@ def get_input (world):
                     end_phase = False
                 else:
                     world[x_val][y_val].state = -1
-            if event.type == pygame.KEYDOWN:
+        if event.type == pygame.KEYDOWN:
+            if event.key == K_SPACE:
                 creating_phase = False
+            elif event.key == K_r:
+                creating_phase = True
+                goal_phase = True
+                end_phase = True
+                start = 0
+                end = 0
+                main()
     return world
 
 
-def build_square_array():
+def build_square_array(): #Creates a matrix of squares 
     world = [[0]*BLOCK_PER_LINE for i in range(BLOCK_PER_LINE)]
     for i in range(BLOCK_PER_LINE):
         for k in range(BLOCK_PER_LINE):
@@ -114,9 +125,9 @@ def build_square_array():
 # 4 - Path back
 
 
-def main(win):
-    world = build_square_array()
-    while(creating_phase):
+def main():
+    world = build_square_array() #Creates our array of squares
+    while(creating_phase): #Waits for us to place the blocks 
         world = get_input(world)
         draw_screen(world)
     
@@ -126,7 +137,7 @@ def main(win):
 
 
 if __name__ == '__main__':
-    main(WIN) 
+    main() 
 
 
 
