@@ -15,7 +15,10 @@ def get_adjacent(start,world,queue, end):
                 if (world[x_axis+x][y+y_axis] in list or queue_contains(queue,world[x+x_axis][y+y_axis])):
                     continue
                 world[x + x_axis][y + y_axis].backpointer = start
-                world[x + x_axis][y + y_axis].cost_to_here = start.cost_to_here + 1  
+                if ((x_axis + y_axis) % 2 == 0):
+                    world[x + x_axis][y + y_axis].cost_to_here = start.cost_to_here + 1.41  
+                else:
+                    world[x + x_axis][y + y_axis].cost_to_here = start.cost_to_here + 1  
                 dist = (((end.x - x - x_axis)**2 + (end.y - y - y_axis)**2))**0.5 #Used for 
                 list.append((world[x + x_axis][y + y_axis].cost_to_here + dist,world[x + x_axis][y+y_axis]))
     
