@@ -2,7 +2,6 @@ import pygame
 from pygame.constants import K_SPACE, K_r
 import a_star
 import dijkstra
-import numpy as np
 
 
 SIZE = 800
