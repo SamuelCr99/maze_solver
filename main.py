@@ -1,7 +1,8 @@
 import pygame
-from pygame.constants import K_SPACE, K_r
 import a_star
 import dijkstra
+import breadth_first_search
+import depth_first_search
 
 
 SIZE = 800
@@ -96,9 +97,9 @@ def get_input (world):
                 else:
                     world[x_val][y_val].state = -1
         if event.type == pygame.KEYDOWN:
-            if event.key == K_SPACE:
+            if event.key == pygame.K_SPACE:
                 creating_phase = False
-            elif event.key == K_r:
+            elif event.key == pygame.K_r:
                 creating_phase = True
                 goal_phase = True
                 end_phase = True
@@ -131,7 +132,10 @@ def main():
         draw_screen(world)
     
     #dijkstra.dijkstra(world,start)
-    a_star.a_star(world,start, end)
+    #a_star.a_star(world,start, end)
+    #breadth_first_search.breadth_first(world, start)
+    depth_first_search.depth_first(world,start)
+    
 
 
 

@@ -1,7 +1,7 @@
 import helper_functions
 import main
 
-def get_adjacent(start,world,queue, end): 
+def get_adjacent(start,world,queue): 
     x = start.x
     y = start.y
     list = []
@@ -13,20 +13,15 @@ def get_adjacent(start,world,queue, end):
                 if (world[x_axis+x][y+y_axis] in list or helper_functions.queue_contains(queue,world[x+x_axis][y+y_axis])):
                     continue
                 world[x + x_axis][y + y_axis].backpointer = start
-                if ((x_axis + y_axis) % 2 == 0):
-                    world[x + x_axis][y + y_axis].cost_to_here = start.cost_to_here + 1.41  
-                else:
-                    world[x + x_axis][y + y_axis].cost_to_here = start.cost_to_here + 1  
-                dist = (((end.x - x - x_axis)**2 + (end.y - y - y_axis)**2))**0.5 #Used for 
-                list.append((world[x + x_axis][y + y_axis].cost_to_here + dist,world[x + x_axis][y+y_axis]))
+                list.append((0,world[x + x_axis][y+y_axis]))
     
     for i in range(len(list)):
         queue.put(list[i])
 
     return queue, world
 
-def a_star(world,start,end):
-    q = helper_functions.queue.PriorityQueue()
+def breadth_first(world,start):
+    q = helper_functions.queue.Queue()
     q.put((0,start))
 
     while not q.empty():
@@ -36,7 +31,7 @@ def a_star(world,start,end):
             helper_functions.extract_path(world,current)
         if (world[current.x][current.y].state == 0):
             world[current.x][current.y].state = 1
-        q, world = get_adjacent(current,world,q, end)
+        q, world = get_adjacent(current,world,q)
         main.draw_screen(world)
         main.get_input(world)
 
