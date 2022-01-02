@@ -1,8 +1,13 @@
+import sys
+
 import pygame
 import a_star
 import dijkstra
 import breadth_first_search
 import depth_first_search
+import lifo_queue
+
+pygame.font.init()
 
 
 SIZE = 800
@@ -20,6 +25,12 @@ RED = (255,0,0)
 GREEN = (0,255,0)
 YELLOW = (255,255,0)
 BLUE = (0,100,255)
+
+#Fonts
+FONT_SIZE = 25
+PHASE_FONT = pygame.font.SysFont('ariel', FONT_SIZE)
+
+name_list = ["A*", "Dijkstra's algorithm", "Breadth First Search", "Depth First search", "Lifo Queue"]
 
 #Phases for different part of the program
 creating_phase = True
@@ -71,6 +82,33 @@ def draw_screen (world):
 
     pygame.display.update()
 
+
+def menu(win):
+    win.fill((255,255,255))
+    font = PHASE_FONT.render("Press:", 1, (0,0,0))
+    win.blit(font, (5, 0))
+    for i in range(len(name_list)):
+        font = PHASE_FONT.render(str(i+1) + ". " + name_list[i], 1, (0,0,0))
+        win.blit(font, (5, (i+1)*20))
+
+    
+
+    while(1):
+        pygame.display.update()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                quit() 
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_1:
+                    return "a_star"
+                elif event.key == pygame.K_2:
+                    return "dijkstra" 
+                elif event.key == pygame.K_3:
+                    return "breadth"  
+                elif event.key == pygame.K_4:
+                    return "depth"
+                elif event.key == pygame.K_5:
+                    return "lifo"  
 
 def get_input (world): 
     global creating_phase
@@ -127,15 +165,35 @@ def build_square_array(): #Creates a matrix of squares
 
 def main():
     world = build_square_array() #Creates our array of squares
+    
+    algo = menu(WIN)
+
     while(creating_phase): #Waits for us to place the blocks 
         world = get_input(world)
         draw_screen(world)
-    
-    #dijkstra.dijkstra(world,start)
-    #a_star.a_star(world,start, end)
-    #breadth_first_search.breadth_first(world, start)
-    depth_first_search.depth_first(world,start)
-    
+    if (sys.version_info[0] + sys.version_info[1]*0.01 >= 3.10): #Checks the version of python as older versions do not support case statement.
+        match algo:
+            case "a_star":
+                a_star.a_star(world,start, end)
+            case "dijkstra":
+                dijkstra.dijkstra(world,start)
+            case "breadth":
+                breadth_first_search.breadth_first(world, start)
+            case "depth":
+                depth_first_search.depth_first(world, start)
+            case "lifo":
+                lifo_queue.lifo(world, start)
+    else:
+        if (algo == "a_star"):
+            a_star.a_star(world, start, end)
+        if (algo == "dijkstra"):
+            dijkstra.dijkstra(world, start)
+        if (algo == "breadth"):
+            breadth_first_search.breadth_first(world, start)
+        if (algo == "depth"):
+            depth_first_search.depth_first(world, start)
+        if (algo == "lifo"):
+            lifo_queue.lifo(world,start)
 
 
 
